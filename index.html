@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <canvas id="canvas" width="600" height="600">
+
+    </canvas>
+    <script type="text/javascript">
+      canvas = document.getElementById('canvas');
+      ctx = canvas.getContext('2d');
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.translate(canvas.width/2,canvas.height/2);
+      ctx.rotate(Math.PI/-2);
+	  ssec = 0;
+	  smin = 0;
+	  nmin = 0;
+	  shor = 0;
+	  nhor = 0;
+      function addZero(i) {
+          if (i < 10) {
+              i = "0" + i;
+          }
+          return i;
+      }
+
+      function ref(){
+        teraz = new Date();
+		mili = teraz.getMilliseconds();
+        sec = teraz.getSeconds();
+        min = teraz.getMinutes();
+        hor = teraz.getHours();
+
+		
+		if(sec == 0 && mili < 100 || ssec > 0){
+			ssec++;
+			nmin=0;
+			if(ssec==60)
+				ssec=0;
+		}
+		else{
+			ssec=0;
+		}
+		if((min == 0 && mili < 100 || smin > 0) && nmin == 0){
+			smin++;
+			nhor=0;
+			nmin=1;
+		}
+		else{
+			smin=0;
+		}		
+		if((hor == 0 && mili < 100 || shor > 0) && nhor == 0){
+			shor++;
+			nhor=1;
+			if(shor==60){
+				shor=0;
+			}
+		}
+		else{
+			shor=0;
+		}
+		
+			
+        ctx.translate(-canvas.width/2,-canvas.height/2);
+         ctx.clearRect(-canvas.width/2,-canvas.height/2,canvas.width/2,canvas.height/2);
+         ctx.fillStyle = '#FCE4EC';
+         ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.translate(canvas.width/2,canvas.height/2);
+        
+		ctx.fillStyle = '#EC407A';
+        ctx.textAlign="center";
+        ctx.font="60px Comic Sans MS";
+        ctx.rotate(Math.PI/2);
+         ctx.fillText(addZero(hor)+':'+addZero(min)+':'+addZero(sec),0,0+30);
+        ctx.rotate(Math.PI/-2);
+		ctx.save();
+		ctx.strokeStyle="#EC407A";
+		for(var i=0;i<60;i++){
+			ctx.beginPath();
+			ctx.moveTo(0,canvas.width/3-30);
+			if(i%5){
+				ctx.lineWidth = 5;
+				ctx.lineTo(0,canvas.width/3-35);
+			}
+			else{
+				ctx.lineWidth = 8;
+				ctx.lineTo(0,canvas.width/3-40);
+			}
+			ctx.stroke();
+			ctx.rotate(Math.PI/30);
+		}
+		ctx.restore();
+		//ctx.rotate(-Math.PI/1200);
+        
+		ctx.beginPath();
+        ctx.strokeStyle = '#E91E63';
+        ctx.arc(0,0,canvas.width/3,Math.PI/30*ssec,Math.PI/30000*(sec*1000 + mili));
+        ctx.moveTo(canvas.width/3,0);
+        ctx.lineTo(canvas.width/3,0);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#C2185B';
+        ctx.arc(0,0,canvas.width/3-10,Math.PI/30*smin,Math.PI/1800*(min*60+sec));
+        ctx.moveTo(canvas.width/3-10,0);
+        ctx.lineTo(canvas.width/3-10,0);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#880E4F';
+        ctx.arc(0,0,canvas.width/3-20,Math.PI/30*shor,Math.PI/360*((hor%12)*60 + min));
+        ctx.moveTo(canvas.width/3-20,0);
+        ctx.lineTo(canvas.width/3-20,0);
+        ctx.stroke();
+      }
+      zegar = window.setInterval(ref,1000/60);
+    </script>
+  </body>
+</html>
